@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 const HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',

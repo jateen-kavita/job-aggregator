@@ -1,7 +1,7 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const { v4: uuidv4 } = require('uuid');
-const https = require('https');
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import { v4 as uuidv4 } from 'uuid';
+import https from 'https';
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 

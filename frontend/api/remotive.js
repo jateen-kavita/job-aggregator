@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 function stripHtml(html) {
     if (!html) return '';

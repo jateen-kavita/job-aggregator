@@ -1,6 +1,6 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const { v4: uuidv4 } = require('uuid');
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import { v4 as uuidv4 } from 'uuid';
 
 const HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
             });
         });
 
-        res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate'); // cache 30 mins
+        res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate');
         res.status(200).json(jobs);
     } catch (err) {
         res.status(500).json({ error: err.message, jobs: [] });
