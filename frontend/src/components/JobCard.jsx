@@ -7,6 +7,7 @@ const SOURCE_COLORS = {
     Internshala: '#0f9d58',
     Remotive: '#7c3aed',
     TimesJobs: '#ff6600',
+    Adzuna: '#1b8354'
 };
 
 function timeAgo(dateStr) {
@@ -34,14 +35,8 @@ export default function JobCard({ job, onApply }) {
 
     function handleApplyClick(e) {
         e.stopPropagation();
-        // Open the job URL
-        if (job.apply_url) {
-            window.open(job.apply_url, '_blank', 'noopener,noreferrer');
-        }
-        // Also mark as applied if not already
-        if (!isApplied) {
-            onApply(job.id, false);
-        }
+        if (job.apply_url) window.open(job.apply_url, '_blank', 'noopener,noreferrer');
+        if (!isApplied) onApply(job.id, false);
     }
 
     function handleTrackClick(e) {
@@ -50,91 +45,64 @@ export default function JobCard({ job, onApply }) {
     }
 
     return (
-        <div
-            className={`job-card ${isNew ? 'is-new' : ''} ${isApplied ? 'is-applied' : ''}`}
-            style={{ '--source-color': sourceColor }}
-        >
-            {/* Top Row: Badges + Source */}
-            <div className="card-top">
-                <div className="card-badges">
-                    {isNew && <span className="badge badge-new">🆕 New</span>}
-                    {isRemote && <span className="badge badge-remote">🌐 Remote</span>}
-                    {isApplied && <span className="badge badge-applied">✅ Applied</span>}
-                </div>
-                <span
-                    className="source-badge"
-                    style={{ background: sourceColor }}
-                >
-                    {job.source}
-                </span>
+        <div className={`job-card ${isNew ? 'is-new' : ''} ${isApplied ? 'is-applied' : ''}`} style={{ '--source-color': sourceColor }}>
+
+            <div className="badges">
+                {isNew && <span className="badge new">New</span>}
+                {isRemote && <span className="badge remote">Remote</span>}
+                {isApplied && <span className="badge applied">Applied</span>}
             </div>
 
-            {/* Title + Company */}
-            <div>
-                <div className="card-title">{job.title}</div>
-                <div className="card-company">🏢 {job.company}</div>
-            </div>
-
-            {/* Meta */}
-            <div className="card-meta">
+            <div className="job-header">
+                <h3 className="job-title">{job.title}</h3>
+                <p className="job-company">{job.company}</p>
                 {job.location && (
-                    <div className="card-meta-item">
-                        <span className="card-meta-icon">📍</span>
-                        <span>{job.location}</span>
-                    </div>
+                    <p className="job-location">
+                        <span style={{ opacity: 0.6 }}>📍</span> {job.location}
+                    </p>
                 )}
+            </div>
+
+            <div className="job-meta">
                 {job.experience && (
-                    <div className="card-meta-item">
-                        <span className="card-meta-icon">💼</span>
-                        <span>{job.experience}</span>
+                    <div className="meta-item">
+                        <span style={{ opacity: 0.6 }}>💼</span> {job.experience}
                     </div>
                 )}
                 {job.salary && (
-                    <div className="card-meta-item">
-                        <span className="card-meta-icon">💰</span>
-                        <span>{job.salary}</span>
+                    <div className="meta-item">
+                        <span style={{ opacity: 0.6 }}>💰</span> {job.salary}
                     </div>
                 )}
-                <div className="card-meta-item">
-                    <span className="card-meta-icon">🕐</span>
-                    <span style={{ color: isNew ? 'var(--new-badge)' : undefined }}>
-                        {isNew ? '🆕 ' : ''}{timeAgo(job.fetched_at)}
-                    </span>
+                <div className="meta-item" style={{ marginLeft: 'auto', fontSize: '0.75rem' }}>
+                    {timeAgo(job.posted_at)}
                 </div>
             </div>
 
-            {/* Skills */}
             {skills.length > 0 && (
-                <div className="card-skills">
+                <div className="job-skills">
                     {skills.map((s, i) => (
                         <span key={i} className="skill-tag">{s}</span>
                     ))}
                 </div>
             )}
 
-            {/* Description */}
             {job.description && (
-                <div className="card-description">{job.description}</div>
+                <div className="job-desc">{job.description}</div>
             )}
 
-            {/* Footer: Apply + Track */}
-            <div className="card-footer">
-                <button
-                    className="apply-btn"
-                    onClick={handleApplyClick}
-                    id={`apply-btn-${job.id}`}
-                    title={`Apply on ${job.source}`}
-                >
-                    Apply on {job.source} ↗
-                </button>
-                <button
-                    className={`track-btn ${isApplied ? 'tracked' : ''}`}
-                    onClick={handleTrackClick}
-                    title={isApplied ? 'Remove from applied' : 'Mark as applied'}
-                    id={`track-btn-${job.id}`}
-                >
-                    {isApplied ? '✅' : '📌'}
-                </button>
+            <div className="job-actions">
+                <span className="source-badge" style={{ color: sourceColor }}>
+                    {job.source}
+                </span>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <button className={`track-btn ${isApplied ? 'tracked' : ''}`} onClick={handleTrackClick} title={isApplied ? 'Remove from applied' : 'Mark as applied'}>
+                        {isApplied ? '✅' : '📌'}
+                    </button>
+                    <button className="apply-btn" onClick={handleApplyClick} title={`Apply on ${job.source}`}>
+                        Apply {job.source !== 'LinkedIn' ? '↗' : ''}
+                    </button>
+                </div>
             </div>
         </div>
     );

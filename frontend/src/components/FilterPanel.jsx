@@ -11,15 +11,6 @@ const SOURCE_COLORS = {
     TimesJobs: '#ff6600',
 };
 
-const SOURCE_EMOJIS = {
-    LinkedIn: '💼',
-    Indeed: '🔍',
-    Naukri: '🇮🇳',
-    Internshala: '🎓',
-    Remotive: '🌐',
-    TimesJobs: '⏰',
-};
-
 export default function FilterPanel({ filters, onChange, stats }) {
     const [searchVal, setSearchVal] = useState(filters.search);
 
@@ -41,10 +32,10 @@ export default function FilterPanel({ filters, onChange, stats }) {
     const hasActiveFilters = filters.source || filters.isRemote !== '' || filters.search || filters.newOnly || filters.appliedOnly;
 
     return (
-        <div>
+        <div className="filter-panel">
             {/* Search */}
-            <div className="filter-section">
-                <div className="filter-title">🔍 Search</div>
+            <div className="filter-group">
+                <label>Search</label>
                 <form onSubmit={handleSearchSubmit}>
                     <input
                         id="search-input"
@@ -58,82 +49,93 @@ export default function FilterPanel({ filters, onChange, stats }) {
             </div>
 
             {/* Quick Filters */}
-            <div className="filter-section">
-                <div className="filter-title">✨ Quick Filters</div>
-                <div className="filter-chip-group">
-                    <button
-                        className={`toggle-chip ${filters.newOnly ? 'active' : ''}`}
-                        onClick={() => update('newOnly', !filters.newOnly)}
-                    >
-                        <span>🆕 Newly Added</span>
-                        <span className="toggle-icon">{filters.newOnly ? '✓' : ''}</span>
-                    </button>
-                    <button
-                        className={`toggle-chip ${filters.appliedOnly ? 'active' : ''}`}
-                        onClick={() => update('appliedOnly', !filters.appliedOnly)}
-                    >
-                        <span>✅ Already Applied</span>
-                        <span className="toggle-icon">{filters.appliedOnly ? '✓' : ''}</span>
-                    </button>
+            <div className="filter-group">
+                <label>Quick Filters</label>
+                <div className="quick-filters">
+                    <label className="checkbox-label" style={{ fontWeight: 500 }}>
+                        <input
+                            type="checkbox"
+                            checked={filters.newOnly}
+                            onChange={() => update('newOnly', !filters.newOnly)}
+                        />
+                        Newly Added Only
+                    </label>
+                    <label className="checkbox-label" style={{ fontWeight: 500 }}>
+                        <input
+                            type="checkbox"
+                            checked={filters.appliedOnly}
+                            onChange={() => update('appliedOnly', !filters.appliedOnly)}
+                        />
+                        Already Applied Only
+                    </label>
                 </div>
             </div>
 
             {/* Job Type */}
-            <div className="filter-section">
-                <div className="filter-title">🌍 Location Type</div>
-                <div className="filter-chip-group">
+            <div className="filter-group">
+                <label>Location Type</label>
+                <div className="toggle-group">
                     <button
-                        className={`filter-chip ${filters.isRemote === '' ? 'active' : ''}`}
+                        className={`toggle-btn ${filters.isRemote === '' ? 'active' : ''}`}
                         onClick={() => update('isRemote', '')}
                     >
-                        🗂️ All Jobs
+                        All
                     </button>
                     <button
-                        className={`filter-chip ${filters.isRemote === 'true' ? 'active' : ''}`}
+                        className={`toggle-btn ${filters.isRemote === 'true' ? 'active' : ''}`}
                         onClick={() => update('isRemote', 'true')}
                     >
-                        🌐 Remote Only
+                        Remote
                     </button>
                     <button
-                        className={`filter-chip ${filters.isRemote === 'false' ? 'active' : ''}`}
+                        className={`toggle-btn ${filters.isRemote === 'false' ? 'active' : ''}`}
                         onClick={() => update('isRemote', 'false')}
                     >
-                        🏢 Onsite / Hybrid
+                        Onsite
                     </button>
                 </div>
             </div>
 
             {/* Source Filter */}
-            <div className="filter-section">
-                <div className="filter-title">📡 Source Platform</div>
-                <div className="filter-chip-group">
+            <div className="filter-group">
+                <label>Source Platform</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <button
-                        className={`filter-chip ${!filters.source ? 'active' : ''}`}
+                        style={{
+                            background: !filters.source ? '#f3f2ef' : 'transparent',
+                            border: '1px solid #e0dfdc',
+                            padding: '6px 12px',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            fontWeight: !filters.source ? 600 : 400
+                        }}
                         onClick={() => update('source', '')}
                     >
                         <span>All Sources</span>
-                        <span className="count">{stats?.total || 0}</span>
+                        <span style={{ color: '#666' }}>{stats?.total || 0}</span>
                     </button>
                     {SOURCES.map(src => (
                         <button
                             key={src}
-                            className={`filter-chip ${filters.source === src ? 'active' : ''}`}
                             onClick={() => update('source', filters.source === src ? '' : src)}
-                            style={filters.source === src ? {
-                                background: `${SOURCE_COLORS[src]}22`,
-                                borderColor: SOURCE_COLORS[src],
-                            } : {}}
+                            style={{
+                                background: filters.source === src ? `${SOURCE_COLORS[src]}11` : 'transparent',
+                                border: `1px solid ${filters.source === src ? SOURCE_COLORS[src] : '#e0dfdc'}`,
+                                padding: '6px 12px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: filters.source === src ? 600 : 400
+                            }}
                         >
-                            <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                                <span
-                                    style={{
-                                        width: 8, height: 8, borderRadius: '50%',
-                                        background: SOURCE_COLORS[src], flexShrink: 0
-                                    }}
-                                />
-                                {SOURCE_EMOJIS[src]} {src}
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span style={{ width: 8, height: 8, borderRadius: '50%', background: SOURCE_COLORS[src] }} />
+                                {src}
                             </span>
-                            <span className="count">{bySource[src] || 0}</span>
+                            <span style={{ color: '#666' }}>{bySource[src] || 0}</span>
                         </button>
                     ))}
                 </div>
@@ -141,9 +143,21 @@ export default function FilterPanel({ filters, onChange, stats }) {
 
             {/* Clear */}
             {hasActiveFilters && (
-                <div className="filter-section">
-                    <button className="clear-btn" onClick={clearAll}>✕ Clear All Filters</button>
-                </div>
+                <button
+                    onClick={clearAll}
+                    style={{
+                        width: '100%',
+                        padding: '8px',
+                        background: 'transparent',
+                        border: '1px solid #cc1016',
+                        color: '#cc1016',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontWeight: 600
+                    }}
+                >
+                    Clear All Filters
+                </button>
             )}
         </div>
     );
