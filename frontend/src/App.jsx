@@ -56,9 +56,10 @@ function App() {
       setTotal(data.pagination.total || 0);
       setPage(pageNum);
     } catch (err) {
-      addToast('error', 'Failed to load jobs. Backend might be starting up.');
+      addToast('error', 'Failed to load jobs.');
     } finally {
       setLoading(false);
+      loadStats();
     }
   }
 
