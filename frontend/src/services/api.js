@@ -101,8 +101,39 @@ export async function fetchJobs(params = {}) {
     if (newOnly === 'true') filtered = filtered.filter(j => j.is_new);
     if (appliedOnly === 'true') filtered = filtered.filter(j => !!j.applied_at);
 
-    // 6. Pagination
-    filtered.sort((a, b) => new Date(b.posted_at) - new Date(a.posted_at));
+    // 6. Filter by Date (Max 1 month old)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    filtered = filtered.filter(j => {
+        try {
+            const postedDate = new Date(j.posted_at);
+            return postedDate >= thirtyDaysAgo;
+        } catch (e) { return true; } // Keep if date parsing fails
+    });
+
+    // 7. Custom Priority Sorting: LinkedIn -> Naukri -> Others -> Then by Date
+    const sourcePriority = {
+        'LinkedIn': 1,
+        'Naukri': 2,
+        'Internshala': 3,
+        'Adzuna': 4,
+        'Remotive': 5,
+        'TimesJobs': 6
+    };
+
+    filtered.sort((a, b) => {
+        const priorityA = sourcePriority[a.source] || 99;
+        const priorityB = sourcePriority[b.source] || 99;
+
+        if (priorityA !== priorityB) {
+            return priorityA - priorityB;
+        }
+        // Fallback to date if same source
+        return new Date(b.posted_at) - new Date(a.posted_at);
+    });
+
+    // 8. Pagination
     const offset = (page - 1) * limit;
     const paginated = filtered.slice(offset, offset + limit);
 
