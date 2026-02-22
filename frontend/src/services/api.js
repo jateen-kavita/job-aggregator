@@ -4,7 +4,7 @@ import axios from 'axios';
 const SOURCES = ['adzuna', 'internshala', 'linkedin', 'naukri', 'remotive', 'timesjobs'];
 
 // LocalStorage Keys
-const CACHE_KEY = 'job_aggregator_cache_v2';
+const CACHE_KEY = 'job_aggregator_cache_v3';
 const APPLIED_KEY = 'job_aggregator_applied';
 const STATS_KEY = 'job_aggregator_stats';
 

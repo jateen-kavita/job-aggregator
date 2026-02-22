@@ -20,7 +20,7 @@ export default function JobGrid({ jobs, loading, total, page, totalPages, onPage
                 {hasActiveFilters && !loading && (
                     <div style={{ fontSize: '0.85rem', color: '#666', display: 'flex', gap: '8px', alignItems: 'center' }}>
                         <span>Sorted by:</span>
-                        <span style={{ background: '#e0dfdc', padding: '2px 8px', borderRadius: '4px', color: '#333' }}>Priority (LinkedIn > Naukri)</span>
+                        <span style={{ background: '#e0dfdc', padding: '2px 8px', borderRadius: '4px', color: '#333' }}>Priority (LinkedIn &gt; Naukri)</span>
                     </div>
                 )}
             </div>
