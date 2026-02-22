@@ -4,12 +4,12 @@ import axios from 'axios';
 const SOURCES = ['adzuna', 'internshala', 'linkedin', 'naukri', 'remotive', 'timesjobs'];
 
 // LocalStorage Keys
-const CACHE_KEY = 'job_aggregator_cache';
+const CACHE_KEY = 'job_aggregator_cache_v2';
 const APPLIED_KEY = 'job_aggregator_applied';
 const STATS_KEY = 'job_aggregator_stats';
 
-// Keep cache for 30 minutes
-const CACHE_TTL = 30 * 60 * 1000;
+// Keep cache for 10 minutes
+const CACHE_TTL = 10 * 60 * 1000;
 
 function getAppliedJobs() {
     try {
@@ -83,6 +83,16 @@ export async function fetchJobs(params = {}) {
         if (job.is_remote) stats.remote_count++;
         stats.by_source[job.source] = (stats.by_source[job.source] || 0) + 1;
     });
+
+    // Add next fetch countdown using cache timestamp + 10 mins
+    const currentCache = localStorage.getItem(CACHE_KEY);
+    if (currentCache) {
+        try {
+            const parsed = JSON.parse(currentCache);
+            stats.next_fetch = new Date(parsed.timestamp + CACHE_TTL).toISOString();
+        } catch (e) { }
+    }
+
     localStorage.setItem(STATS_KEY, JSON.stringify(stats));
 
     // 5. Apply Filters

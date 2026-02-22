@@ -30,13 +30,13 @@ function App() {
     document.title = 'JobSync – Analyst Jobs Aggregator';
   }, []);
 
-  // Poll every 60 seconds for live updates to stats
+  // Poll every 30 seconds for live updates to stats or cache expiration
   useEffect(() => {
     const interval = setInterval(() => {
-      loadStats();
-    }, 60000);
+      loadJobs(page, filters);
+    }, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [page, filters]);
 
   async function loadJobs(pageNum = 1, activeFilters = filters) {
     setLoading(true);
